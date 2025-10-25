@@ -4,6 +4,8 @@ pipeline {
     environment {
         IMAGE_NAME = "calculator-web"
         CONTAINER_NAME = "calculator_web_container"
+        HOST_PORT = "82"   // port host yang digunakan
+        CONTAINER_PORT = "80"
     }
 
     stages {
@@ -19,19 +21,23 @@ pipeline {
             }
         }
 
-      stage('Run Docker Container') {
-    steps {
-        bat 'docker rm -f %CONTAINER_NAME% || echo Container tidak ada'
-        bat 'docker run -d -p 82:80 --name %CONTAINER_NAME% %IMAGE_NAME%'
+        stage('Run Docker Container') {
+            steps {
+                // Hentikan dan hapus container lama jika ada
+                bat 'docker rm -f %CONTAINER_NAME% || echo Container tidak ada'
+                // Jalankan container baru di port 82
+                bat 'docker run -d -p %HOST_PORT%:%CONTAINER_PORT% --name %CONTAINER_NAME% %IMAGE_NAME%'
+            }
+        }
     }
-}
 
     post {
         success {
-            echo "Calculator web berhasil dijalankan di http://localhost:8080"
+            echo "Calculator web berhasil dijalankan di http://localhost:%HOST_PORT%"
         }
         failure {
             echo "Build gagal!"
         }
     }
 }
+
