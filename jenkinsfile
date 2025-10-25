@@ -35,9 +35,7 @@ pipeline {
                 bat 'powershell -Command "Start-Sleep -Seconds 10"'
                 
                 // Verifikasi dengan curl
-                bat """
-                curl -s -o nul -w "%{http_code}" %APP_URL% | findstr 200
-                """
+                 bat 'curl -s -o nul -w "%%{http_code}" "%APP_URL%" | findstr 200'
             }
         }
     }
