@@ -19,13 +19,12 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
-            steps {
-                bat 'docker rm -f %CONTAINER_NAME% || echo Container tidak ada'
-                bat 'docker run -d -p 8080:80 --name %CONTAINER_NAME% %IMAGE_NAME%'
-            }
-        }
+      stage('Run Docker Container') {
+    steps {
+        bat 'docker rm -f %CONTAINER_NAME% || echo Container tidak ada'
+        bat 'docker run -d -p 82:80 --name %CONTAINER_NAME% %IMAGE_NAME%'
     }
+}
 
     post {
         success {
