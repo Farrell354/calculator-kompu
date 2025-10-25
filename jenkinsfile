@@ -4,8 +4,9 @@ pipeline {
     environment {
         IMAGE_NAME = "calculator-web"
         CONTAINER_NAME = "calculator_web_container"
-        HOST_PORT = "82"   // port host yang digunakan
+        HOST_PORT = "82"
         CONTAINER_PORT = "80"
+        APP_URL = "http://localhost:82"
     }
 
     stages {
@@ -23,21 +24,30 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                // Hentikan dan hapus container lama jika ada
                 bat 'docker rm -f %CONTAINER_NAME% || echo Container tidak ada'
-                // Jalankan container baru di port 82
                 bat 'docker run -d -p %HOST_PORT%:%CONTAINER_PORT% --name %CONTAINER_NAME% %IMAGE_NAME%'
+            }
+        }
+
+        stage('Verify App') {
+            steps {
+                // Tunggu container start
+                bat 'timeout /t 5'
+                
+                // Verifikasi dengan curl
+                bat """
+                curl -s -o nul -w "%{http_code}" %APP_URL% | findstr 200
+                """
             }
         }
     }
 
     post {
         success {
-            echo "Calculator web berhasil dijalankan di http://localhost:%HOST_PORT%"
+            echo "Calculator web berhasil dijalankan dan terverifikasi di %APP_URL%"
         }
         failure {
-            echo "Build gagal!"
+            echo "Build atau verifikasi gagal!"
         }
     }
 }
-
