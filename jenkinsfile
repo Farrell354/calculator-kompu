@@ -31,8 +31,8 @@ pipeline {
 
         stage('Verify App') {
             steps {
-                // Tunggu container start
-                bat 'timeout /t 5'
+                // Tunggu container start 10 detik
+                bat 'powershell -Command "Start-Sleep -Seconds 10"'
                 
                 // Verifikasi dengan curl
                 bat """
