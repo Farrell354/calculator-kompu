@@ -1,14 +1,14 @@
-# Gunakan nginx sebagai base image
+# Menggunakan image nginx sebagai base image
 FROM nginx:alpine
 
-# Hapus default nginx HTML
+# Menghapus konten default nginx
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy semua file web ke nginx
-COPY . /usr/share/nginx/html
+# Menyalin file HTML ke direktori nginx
+COPY calculator.html /usr/share/nginx/html/index.html
 
-# Expose port 80
+# Mengekspos port 80
 EXPOSE 80
 
-# Jalankan nginx di foreground
+# Menjalankan nginx di foreground
 CMD ["nginx", "-g", "daemon off;"]
